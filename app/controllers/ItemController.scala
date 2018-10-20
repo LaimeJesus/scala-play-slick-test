@@ -20,7 +20,7 @@ class ItemController @Inject()(repo: ItemRepository,
   }
 
   def addItem(): Action[AnyContent] = Action.async { implicit request =>
-    CreateItemForm.itemForm.bindFromRequest.fold(
+    ItemForm.itemForm.bindFromRequest.fold(
       _ => {
         Future.successful(Ok("error creating item"))
       },
