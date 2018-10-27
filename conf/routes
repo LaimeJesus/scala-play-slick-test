@@ -14,3 +14,9 @@ GET          /items               controllers.ItemController.getItems
 POST         /items               controllers.ItemController.addItem
 DELETE       /items/:id           controllers.ItemController.deleteItem(id : Long)
 GET          /items/:id           controllers.ItemController.getItem(id : Long)
+
+GET          /sending_requests    controllers.SendingRequestController.getSendingRequests
+POST         /sending_requests    controllers.SendingRequestController.addSendingRequest
+DELETE       /sending_requests/:id    controllers.SendingRequestController.deleteSendingRequest(id : Long)
+GET          /sending_requests/:id    controllers.SendingRequestController.getSendingRequest(id : Long)
+
