@@ -1,19 +1,17 @@
 package formValidations
 
-import models.Item
 import play.api.data.Form
 import play.api.data.Forms._
 
-case class SendingRequestForm(origin: String, destination: String,isFragile: Boolean, items: List[Item], refrigerationLevel: String)
+case class SendingRequestForm(name: String, origin: String, destination: String, items: List[ItemForm])
 
 object SendingRequestForm {
   val sendingRequestForm: Form[SendingRequestForm] = Form {
     mapping(
+      "name" -> nonEmptyText,
       "origin" -> nonEmptyText,
       "destination" -> nonEmptyText,
-      "isFragile" -> boolean,
-      "items" -> ItemForm.itemForm.mapping(), // raro, deberia romper y funcionar con list(ItemForm.itemForm.mapping())
-      "refrigerationLevel" -> nonEmptyText,
+      "items" -> list(ItemForm.itemForm.mapping)
     )(SendingRequestForm.apply)(SendingRequestForm.unapply)
   }
 }
