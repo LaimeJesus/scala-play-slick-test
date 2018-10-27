@@ -5,6 +5,8 @@ import play.api.libs.json.Json
 import services.ItemRepository
 import play.api.mvc._
 import formValidations._
+import models.Item
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class ItemController @Inject()(repo: ItemRepository,
@@ -13,7 +15,6 @@ class ItemController @Inject()(repo: ItemRepository,
   extends MessagesAbstractController(cc) {
 
   // mapping
-
 
   def index = Action { implicit request =>
     Ok("items")
@@ -25,7 +26,9 @@ class ItemController @Inject()(repo: ItemRepository,
         Future.successful(Ok("error creating item"))
       },
       itemFromForm => {
-        repo.create(itemFromForm.name, itemFromForm.weight, itemFromForm.size).map { resItem =>
+        repo.create(
+          Item(itemFromForm.name, itemFromForm.quantity, itemFromForm.weight, itemFromForm.size, itemFromForm.isFragile, itemFromForm.refrigerationLevel, itemFromForm.requestId.get)
+        ).map { resItem =>
           Ok(Json.toJson(resItem))
         }
       }
