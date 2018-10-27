@@ -1,29 +1,23 @@
 package services
 
-import db.ItemTable
+import db.DatabaseSchema
 import javax.inject.{Inject, Singleton}
 import models.Item
 import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.JdbcProfile
-import slick.lifted.TableQuery
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ItemRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class ItemRepository @Inject() (dbConfigProvider: DatabaseConfigProvider) (implicit ec: ExecutionContext) extends DatabaseSchema {
 
-  private val dbConfig = dbConfigProvider.get[JdbcProfile]
-  private val items = TableQuery[ItemTable]
-
+  import slick.jdbc.H2Profile
+  private val dbConfig = dbConfigProvider.get[H2Profile]
   import dbConfig._
   import profile.api._
 
   private def find(id:Long) = items.filter(_.id === id)
 
-  def create(name: String, weight: Long, size: Long): Future[Item] = db run {
-    (items.map(item => (item.name, item.weight, item.size))
-      returning items.map(_.id)
-      into ((tupleValues, id) => Item(id, tupleValues._1, tupleValues._2, tupleValues._3))
-      ) += (name, weight, size)
+  def create(item: Item): Future[Long] = db run {
+    (items returning items.map(_.id) += item).map(itemId => itemId)
   }
 
   def list(): Future[Seq[Item]] = db.run(items.result)
