@@ -1,10 +1,9 @@
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
-case class SendingRequest(id: Long, origin: String, destination: String, items: List[Item], isFragile: Boolean, refrigerationLevel: String)
-//owner: User, refrigerationLevel: RefrigerationLevel
+case class SendingRequest(name: String, origin: String, destination: String, id: Long = 0L)
 
 object SendingRequest {
-  implicit val sendinRequestFormat = Json.format[SendingRequest]
+  implicit val sendinRequestFormat: OFormat[SendingRequest] = Json.format[SendingRequest]
 }
